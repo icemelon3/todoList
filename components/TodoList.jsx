@@ -12,17 +12,15 @@ export default function TodoList() {
     useEffect(() => {
         const savedItems = localStorage.getItem('workItems');
         if(savedItems){
-            setWorkItems(JSON.parse(savedItems));
-            setFilteredItems(savedItems);
-            console.log('filteredItems:', filteredItems);
-            console.log('typeof filteredItems:', typeof filteredItems);
-            console.log('Array.isArray(filteredItems):', Array.isArray(filteredItems));
+            const parsedItems = JSON.parse(savedItems);
+            setWorkItems(parsedItems);
+            changeFilter(curFilter, parsedItems);
         }
     }, []);
 
     useEffect(() => {
         localStorage.setItem('workItems', JSON.stringify(workItems));
-        changeFilter(curFilter, workItems)
+        changeFilter(curFilter, workItems);
     }, [workItems, curFilter]);
 
     const handleSave = ()=>{
