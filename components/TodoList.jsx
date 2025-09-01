@@ -7,7 +7,10 @@ export default function TodoList() {
     const [workItems, setWorkItems] = React.useState([]);
     const [curFilter, setCurrentFilter] = React.useState('all');
     const [filteredItems, setFilteredItems] = React.useState([]);
-    const [mode, setMode] = React.useState('light');
+    const [mode, setMode] = React.useState(() => {
+        const savedMode = localStorage.getItem('darkMode');
+        return savedMode || 'light';
+    });
     
     useEffect(() => {
         const savedItems = localStorage.getItem('workItems');
@@ -16,12 +19,21 @@ export default function TodoList() {
             setWorkItems(parsedItems);
             changeFilter(curFilter, parsedItems);
         }
+        
+        // 다크모드 상태 복원
+        if(mode === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
     }, []);
 
     useEffect(() => {
         localStorage.setItem('workItems', JSON.stringify(workItems));
         changeFilter(curFilter, workItems);
     }, [workItems, curFilter]);
+
+    useEffect(() => {
+        localStorage.setItem('darkMode', mode);
+    }, [mode]);
 
     const handleSave = ()=>{
         const inputDesc = document.getElementById("todoDesc").value;
@@ -52,17 +64,11 @@ export default function TodoList() {
     };
 
     const handleModeChange = () => {
-
+        const newMode = mode === 'light' ? 'dark' : 'light';
+        setMode(newMode);
+        
+        // DOM 클래스 토글
         document.body.classList.toggle('dark-mode');
-
-        document.getElementById('header').classList.toggle('dark-mode');
-        document.getElementById('footer').classList.toggle('dark-mode');
-        document.getElementById('content').classList.toggle('dark-mode');
-        document.getElementById('todoDesc').classList.toggle('dark-mode');
-        document.getElementById('addButton').classList.toggle('dark-mode');
-     
-
-        setMode(mode==='light'?'dark':'light');
     }
 
     const changeFilter = (filter, items)=>{
@@ -99,7 +105,7 @@ export default function TodoList() {
 
     return (
         <div className='todo-list-layer'>
-            <div className='header' id='header'>
+            <div className={`header ${mode === 'dark' ? 'dark-mode' : ''}`} id='header'>
                 <ul className='mode' ><MdOutlineLightMode onClick={handleModeChange}/></ul>
                 <ul className='filter'>
                     <button className='filter_btn' id='allBtn' onClick={handleViewAll} >All</button>
@@ -107,7 +113,7 @@ export default function TodoList() {
                     <button className='filter_btn' id='completedBtn' onClick={handleViewCompleted}>Completed</button>
                 </ul>
             </div>
-            <div className='content' id='content'>
+            <div className={`content ${mode === 'dark' ? 'dark-mode' : ''}`} id='content'>
                 <ul className='todoItems'>
                     {Array.isArray(filteredItems) && filteredItems.length > 0 && filteredItems.map((e)=>(
                      <li className='todoItem' key={e.idx}>
@@ -127,16 +133,16 @@ export default function TodoList() {
                      ))}
                 </ul>
                 </div>
-            <div className='footer' id='footer'>   
+            <div className={`footer ${mode === 'dark' ? 'dark-mode' : ''}`} id='footer'>   
                 <input 
                     type="text" 
                     name="todoDesc" 
                     id="todoDesc" 
-                    className='todoDesc'
+                    className={`todoDesc ${mode === 'dark' ? 'dark-mode' : ''}`}
                     onKeyDown={handleKeyDown}
                     placeholder="할 일을 입력하세요."
                 />
-                <input type="button" value="Add" className='addButton' id='addButton' onClick={handleSave}/>
+                <input type="button" value="Add" className={`addButton ${mode === 'dark' ? 'dark-mode' : ''}`} id='addButton' onClick={handleSave}/>
             </div>
         </div>
     );
