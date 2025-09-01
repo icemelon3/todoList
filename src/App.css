@@ -92,6 +92,14 @@ color: #0a0a0ac0;
   color: #fb8500;
 }
 
+.header.dark-mode .filter_btn {
+  color: #fb8500;
+}
+
+.header.dark-mode .mode {
+  color: #fb8500;
+}
+
 
 .mode{
   margin: 5px 15px;
@@ -116,7 +124,7 @@ padding: 20px;
 height: 80%;
 padding: 20px;
 background-color: #e5e5e5;
-color: #e0e0e0;
+color: #000;
 }
 
 .todoItem{
