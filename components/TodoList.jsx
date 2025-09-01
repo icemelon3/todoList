@@ -136,7 +136,7 @@ export default function TodoList() {
                     id="todoDesc" 
                     className='todoDesc'
                     onKeyDown={handleKeyDown}
-                    placeholder="할 일을 입력하세요"
+                    placeholder="할 일을 입력하세요."
                 />
                 <input type="button" value="Add" className='addButton' id='addButton' onClick={handleSave}/>
             </div>
