@@ -1,38 +1,36 @@
-import React, { useEffect } from 'react';
-import { HiMoon, HiSun } from "react-icons/hi";
+import React from 'react';
+import { MdOutlineLightMode  } from "react-icons/md";
 import { FaTrashAlt } from "react-icons/fa";
-import {useDarkMode} from '../context/DarkModeContext';
+import { CgLayoutGrid } from 'react-icons/cg';
+import { CiTurnL1 } from 'react-icons/ci';
 
 export default function TodoList() {
-    const [workItems, setWorkItems] = React.useState([()=>getLocalStorageItems()]);
-    const [curFilter, setCurrentFilter] = React.useState('all');
+    const [workItems, setWorkItems] = React.useState([]);
     const [filteredItems, setFilteredItems] = React.useState([]);
-    const {darkMode, toggleDarkMode} = useDarkMode();
+    const [currentFilter, setCurrentFilter] = React.useState('all');
     
-    /*useEffect(() => {
-
-        const savedItems = JSON.parse(localStorage.getItem('workItems'));
-
-        if(savedItems){
+    // localStorage에서 데이터 불러오기
+    React.useEffect(() => {
+        const savedItems = localStorage.getItem('todoItems');
+        if (savedItems) {
             const parsedItems = JSON.parse(savedItems);
             setWorkItems(parsedItems);
-            changeFilter(curFilter, parsedItems);
+            setFilteredItems(parsedItems);
         }
     }, []);
 
-   useEffect(() => {
-    console.log('workItems changed:');
-       // localStorage.setItem('workItems', JSON.stringify(workItems));
-        changeFilter(curFilter, workItems);
-    }, [workItems]);*/
-
+    // workItems가 변경될 때마다 localStorage에 저장하고 필터링 적용
+    React.useEffect(() => {
+        localStorage.setItem('todoItems', JSON.stringify(workItems));
+        applyFilter(currentFilter, workItems);
+    }, [workItems, currentFilter]);
+    
     const handleSave = ()=>{
         const inputDesc = document.getElementById("todoDesc").value;
-        console.log(inputDesc);
         if (inputDesc.trim() !== '') {
-            console.log('add item');
             setWorkItems([...workItems, {'idx':workItems.length+1, 'desc':inputDesc, 'status':'active', 'completed': false}])
             document.getElementById("todoDesc").value = '';
+            console.log(workItems);
         }
     }
 
@@ -44,7 +42,6 @@ export default function TodoList() {
 
 
     const handleCheckboxChange = (idx) => {
-        console.log('checkbox change: ', idx);
        setWorkItems(workItems.map(item => 
             item.idx === idx 
                 ? {...item, completed: !item.completed}
@@ -52,57 +49,51 @@ export default function TodoList() {
         ));
     }
 
-    const handleDel = (idx) => ()=>{
-        console.log('delete item: ', idx);
-        setWorkItems(workItems.filter(item=>item.idx!=idx));
-    };
+    const handleDelete = (idx) => {
+        setWorkItems(workItems.filter(item => item.idx !== idx));
+    }
 
-
-    const changeFilter = (filter, items)=>{
-        switch(filter){
-            case 'all':
-                setFilteredItems(items)
-                break;
+    const applyFilter = (filter, items) => {
+        switch(filter) {
             case 'active':
                 setFilteredItems(items.filter(item => !item.completed));
                 break;
             case 'completed':
                 setFilteredItems(items.filter(item => item.completed));
                 break;
-;        }
+            default:
+                setFilteredItems(items);
+        }
     }
 
     const handleViewAll = () => {
-        console.log('all');
-        setCurrentFilter('all')
+        setCurrentFilter('all');
         setFilteredItems(workItems);
     }
 
     const handleViewActive = () => {
-        console.log('active');
-        setCurrentFilter('active')
+        setCurrentFilter('active');
         setFilteredItems(workItems.filter(item => !item.completed));
     }
 
     const handleViewCompleted = () => {
-        console.log('completed');
         setCurrentFilter('completed');
         setFilteredItems(workItems.filter(item => item.completed));
     }
 
     return (
         <div className='todo-list-layer'>
-            <div className={`header`} id='header'>
-                <button className='mode' onClick={toggleDarkMode}>{!darkMode ? <HiMoon/> : <HiSun/>}</button>
+            <div className='header' id='header'>
+                <ul className='mode' ><MdOutlineLightMode /></ul>
                 <ul className='filter'>
-                    <button className='filter_btn' id='allBtn' onClick={handleViewAll} >All</button>
+                    <button className='filter_btn' id='allBtn' onClick={handleViewAll}>All</button>
                     <button className='filter_btn' id='activeBtn' onClick={handleViewActive}>Active</button>
                     <button className='filter_btn' id='completedBtn' onClick={handleViewCompleted}>Completed</button>
                 </ul>
             </div>
-            <div className={`content`} id='content'>
+            <div className='content' id='content'>
                 <ul className='todoItems'>
-                    {Array.isArray(filteredItems) && filteredItems.length > 0 && filteredItems.map((e)=>(
+                    {filteredItems.map((e)=>(
                      <li className='todoItem' key={e.idx}>
                          <div className={`todo-content ${e.completed ? 'completed' : ''}`}>
                              <input 
@@ -114,28 +105,24 @@ export default function TodoList() {
                              />
                              <label htmlFor = {`checkbox${e.idx}`} >{e.desc}</label>
                          </div>
-                         <FaTrashAlt className='delIcon' onClick={handleDel(e.idx)}/>
+                         <FaTrashAlt className='delIcon' onClick={() => handleDelete(e.idx)} />
                          
                      </li>
                      ))}
                 </ul>
                 </div>
-            <div className={`footer`} id='footer'>   
+            <div className='footer' id='footer'>   
                 <input 
                     type="text" 
                     name="todoDesc" 
                     id="todoDesc" 
-                    className={`todoDesc`}
+                    className='todoDesc'
                     onKeyDown={handleKeyDown}
-                    placeholder="할 일을 입력하세요."
+                    placeholder="할 일을 입력하세요"
                 />
-                <input type="button" value="Add" className={`addButton`} id='addButton' onClick={handleSave}/>
+                <input type="button" value="Add" className='addButton' onClick={handleSave}/>
             </div>
         </div>
     );
 }
 
-function getLocalStorageItems(){
-    const todos = localStorage.getItem('workItems');
-    return todos?JSON.parse(todos):[];
-}

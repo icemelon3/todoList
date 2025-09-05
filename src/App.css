@@ -46,6 +46,20 @@ table {
 }
 
 
+:root{
+--color-text:#fb8500;
+--color-hover:#59a0fc;
+--color-white:#ffffff;
+--color-bg : #fefae0;
+
+}
+
+html.dark{
+--color-text:#023047;
+--color-white:darkgrey;
+--color-bg : #e5e5e5;
+}
+
 button{
 background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer}
 
@@ -54,6 +68,8 @@ body{
 justify-content: center;
 margin:0
 }
+
+
 .todo-list-layer{
   width: 300px;
   height: 450px;
@@ -62,7 +78,6 @@ margin:0
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background-color: #fefae0; 
   box-shadow: 9px 10px 18px 0px rgba(0,0,0,0.75);
 -webkit-box-shadow: 9px 10px 18px 0px rgba(0,0,0,0.75);
 -moz-box-shadow: 9px 10px 18px 0px rgba(0,0,0,0.75);
@@ -77,27 +92,14 @@ color: #0a0a0ac0;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background-color: #fb8500;
+  background-color: var(--color-text);
   height: 10%;
 }
 
 
-.header.dark-mode{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #023047;
-  height: 10%;
-  color: #fb8500;
-}
-
-.header.dark-mode .filter_btn {
-  color: #fb8500;
-}
-
-.header.dark-mode .mode {
-  color: #fb8500;
+.header.dark-mode .filter_btn
+,.header.dark-mode .mode {
+  color: var(--color-text);
 }
 
 
@@ -111,21 +113,16 @@ color: #0a0a0ac0;
 
 .filter_btn:hover{
   text-decoration: underline;
-  text-decoration-color: #59a0fc;
+  text-decoration-color: var(--color-hover);
   text-decoration-thickness: 5px;
 }
 
 .content{
 height: 80%;
 padding: 20px;
+background-color: var(--color-bg);
 }
 
-.content.dark-mode{
-height: 80%;
-padding: 20px;
-background-color: #e5e5e5;
-color: #000;
-}
 
 .todoItem{
   display: flex;
@@ -153,33 +150,18 @@ color: #000;
 
 .footer{
   height:10%;
-  background-color: #fb8500;
-  color: #fff;
+  background-color: var(--color-text);
+  color: var(----color-white);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.footer.dark-mode{
-  height:10%;
-  background-color: #023047;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 .todoDesc{
   width: 80%;
   height: 60%;
-  border: 1px solid #fff;
-  border-radius: 5px;
-}
-
-.todoDesc.dark-mode{
-  width: 80%;
-  height: 60%;
-  border: 1px solid darkgray;
+  border: 1px solid var(----color-white);
   border-radius: 5px;
 }
 
@@ -191,15 +173,11 @@ color: #000;
 .addButton.dark-mode{
   height: 65%;
   margin-left: 3px;
-  background-color: #fb8500;
+  background-color: var(--color-text);
 }
 
 .mode{
   color:#fff;
 }
 
-.dark-mode{
-  background-color: #121212;
-  color: #e0e0e0;
-}
 
