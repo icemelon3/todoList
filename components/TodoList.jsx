@@ -50,7 +50,7 @@ export default function TodoList() {
                 ? {...item, completed: !item.completed}
                 : item
         ));
-    }
+    } 
 
     const handleDel = (idx) => ()=>{
         console.log('delete item: ', idx);
