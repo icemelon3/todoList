@@ -4,15 +4,18 @@ import { FaTrashAlt } from "react-icons/fa";
 import {useDarkMode} from '../context/DarkModeContext';
 
 export default function TodoList() {
-    const [workItems, setWorkItems] = React.useState([()=>getLocalStorageItems()]);
+    const getLocalStorageItems = () => {
+        const todos = localStorage.getItem('workItems');
+        return todos ? JSON.parse(todos) : [];
+    };
+    
+    const [workItems, setWorkItems] = React.useState(()=>getLocalStorageItems());
     const [curFilter, setCurrentFilter] = React.useState('all');
     const [filteredItems, setFilteredItems] = React.useState([]);
     const {darkMode, toggleDarkMode} = useDarkMode();
     
-    /*useEffect(() => {
-
-        const savedItems = JSON.parse(localStorage.getItem('workItems'));
-
+    useEffect(() => {
+        const savedItems = localStorage.getItem('workItems');
         if(savedItems){
             const parsedItems = JSON.parse(savedItems);
             setWorkItems(parsedItems);
@@ -20,11 +23,11 @@ export default function TodoList() {
         }
     }, []);
 
-   useEffect(() => {
-    console.log('workItems changed:');
-       // localStorage.setItem('workItems', JSON.stringify(workItems));
+    useEffect(() => {
+        console.log('workItems changed:');
+        localStorage.setItem('workItems', JSON.stringify(workItems));
         changeFilter(curFilter, workItems);
-    }, [workItems]);*/
+    }, [workItems, curFilter]);
 
     const handleSave = ()=>{
         const inputDesc = document.getElementById("todoDesc").value;
@@ -133,9 +136,4 @@ export default function TodoList() {
             </div>
         </div>
     );
-}
-
-function getLocalStorageItems(){
-    const todos = localStorage.getItem('workItems');
-    return todos?JSON.parse(todos):[];
 }

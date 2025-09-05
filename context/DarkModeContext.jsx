@@ -17,7 +17,7 @@ export function DarkModeProvoider({children}){
         const newDarkMode = !darkMode;
         setDarkMode(newDarkMode);
         updateDarkMode(newDarkMode);
-        localStorage.setItem('theme', newDarkMode ? 'dark' : '');
+        localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
     }
     
     useEffect(()=>{
